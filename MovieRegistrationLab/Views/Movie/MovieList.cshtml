@@ -1,0 +1,15 @@
+﻿@using MovieRegistrationLab.Controllers;
+
+@{
+    for (int i=0;i<MovieController.movies.Count;i++)
+    {
+        Movie m = MovieController.movies[i];
+        <form action="/Movie/AddMovie" method="get">
+            <input type="hidden" name="ID" value="@m.ID" />
+            <p>
+                @m.Title
+                <input type="submit" value="Add to Cart" />
+            </p>
+        </form>
+    }
+}

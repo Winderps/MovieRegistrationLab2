@@ -1,0 +1,22 @@
+﻿@using Microsoft.AspNetCore.Http
+@using System.Text.Json;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{ 
+    string movieListJSON = HttpContextAccessor.HttpContext.Session.GetString("MovieCart") ?? "NULL";
+    List<Movie> currentCart = new List<Movie>();
+    if (movieListJSON != "NULL")
+    {
+        currentCart = JsonSerializer.Deserialize<List<Movie>>(movieListJSON);
+    }
+    double total = 0.0d;
+    foreach (Movie m in currentCart)
+    {
+        total += 6.99;
+        <p>@m.Title $6.99</p>
+    }
+    <p>Total: @total.ToString("C2")</p>
+    currentCart = new List<Movie>();
+    movieListJSON = JsonSerializer.Serialize(currentCart);
+    HttpContextAccessor.HttpContext.Session.SetString("MovieCart", movieListJSON);
+}

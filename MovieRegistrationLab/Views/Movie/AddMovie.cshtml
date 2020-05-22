@@ -1,0 +1,24 @@
+﻿@model Movie
+@using Microsoft.AspNetCore.Http
+@using System.Text.Json;
+@inject IHttpContextAccessor HttpContextAccessor
+
+@{
+    string movieListJSON = HttpContextAccessor.HttpContext.Session.GetString("MovieCart") ?? "NULL";
+    List<Movie> currentCart = new List<Movie>();
+    if (movieListJSON != "NULL")
+    {
+        currentCart = JsonSerializer.Deserialize<List<Movie>>(movieListJSON);
+    }
+    if (!currentCart.Any(x => x.ID.Equals(Model.ID)))
+    {
+        currentCart.Add(Model);
+        movieListJSON = JsonSerializer.Serialize(currentCart);
+        HttpContextAccessor.HttpContext.Session.SetString("MovieCart", movieListJSON);
+        <p>@Model.Title was added to your cart.</p>
+    }
+    else
+    {
+        <p>@Model.Title is already in your cart.</p>
+    }
+}
